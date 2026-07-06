@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "ignoreDeprecations": "6.0",
+    "baseUrl": ".",
+    "paths": {
+      "@virentia/net-core": ["packages/core/lib/index.ts"],
+      "@virentia/net-react": ["packages/react/lib/index.ts"],
+      "@virentia/net-vue": ["packages/vue/lib/index.ts"]
+    }
+  },
+  "include": [
+    "packages/core/lib/**/*.ts",
+    "packages/core/tests/**/*.ts",
+    "packages/core/tsdown.config.ts",
+    "packages/react/lib/**/*.ts",
+    "packages/react/tests/**/*.ts",
+    "packages/react/tsdown.config.ts",
+    "packages/vue/lib/**/*.ts",
+    "packages/vue/tests/**/*.ts",
+    "packages/vue/tsdown.config.ts"
+  ]
+}

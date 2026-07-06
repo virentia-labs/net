@@ -1,0 +1,43 @@
+{
+  "name": "@virentia/net-root",
+  "version": "0.0.1",
+  "private": true,
+  "description": "",
+  "keywords": [],
+  "homepage": "https://movpushmov.dev/net",
+  "bugs": {
+    "url": "https://github.com/virentia-labs/net/issues"
+  },
+  "license": "MIT",
+  "author": "movpushmov",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/virentia-labs/net.git"
+  },
+  "scripts": {
+    "build": "pnpm -r build",
+    "format": "oxfmt --write .",
+    "format:check": "oxfmt --check .",
+    "lint": "oxlint .",
+    "changeset": "changeset",
+    "prepare-release": "node scripts/prepare-release.mjs",
+    "version-packages": "changeset version && pnpm install --lockfile-only",
+    "release": "changeset publish",
+    "test": "pnpm -r test",
+    "test:watch": "pnpm -r --parallel test:watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@babel/core": "7.29.0",
+    "@changesets/cli": "2.31.0",
+    "oxfmt": "^0.48.0",
+    "oxlint": "^1.63.0",
+    "tsdown": "^0.21.10",
+    "typescript": "^6.0.3",
+    "vitest": "0.34.6"
+  },
+  "engines": {
+    "node": ">=22.13"
+  },
+  "packageManager": "pnpm@11.0.9"
+}

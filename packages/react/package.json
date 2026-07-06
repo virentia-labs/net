@@ -1,0 +1,55 @@
+{
+  "name": "@virentia/net-react",
+  "version": "0.0.0",
+  "description": "",
+  "keywords": [],
+  "homepage": "https://movpushmov.dev/net/react/",
+  "bugs": {
+    "url": "https://github.com/virentia-labs/net/issues"
+  },
+  "license": "MIT",
+  "author": "movpushmov",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/virentia-labs/net.git",
+    "directory": "packages/react"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@virentia/net-core": "workspace:*",
+    "@virentia/react": "^0.2.11"
+  },
+  "devDependencies": {
+    "@testing-library/react": "^16.3.0",
+    "@types/react": "^19.2.7",
+    "@virentia/core": "0.6.3",
+    "happy-dom": "^20.0.10",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1"
+  },
+  "peerDependencies": {
+    "@virentia/core": ">=0.4",
+    "react": ">=18"
+  }
+}
