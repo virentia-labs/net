@@ -1,0 +1,55 @@
+{
+  "name": "@virentia/net-core",
+  "version": "0.0.0",
+  "description": "",
+  "keywords": [],
+  "homepage": "https://movpushmov.dev/net/core/",
+  "bugs": {
+    "url": "https://github.com/virentia-labs/net/issues"
+  },
+  "license": "MIT",
+  "author": "movpushmov",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/virentia-labs/net.git",
+    "directory": "packages/core"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    },
+    "./tanstack": {
+      "types": "./dist/adapters/tanstack.d.mts",
+      "import": "./dist/adapters/tanstack.mjs",
+      "require": "./dist/adapters/tanstack.cjs"
+    },
+    "./apollo": {
+      "types": "./dist/adapters/apollo.d.mts",
+      "import": "./dist/adapters/apollo.mjs",
+      "require": "./dist/adapters/apollo.cjs"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "peerDependencies": {
+    "@virentia/core": ">=0.4"
+  },
+  "devDependencies": {
+    "@virentia/core": "0.6.3"
+  }
+}
