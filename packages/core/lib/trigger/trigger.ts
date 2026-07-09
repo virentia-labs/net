@@ -32,14 +32,21 @@ export function trigger<Raw>(
   const r = bindReaction({
     on: binding.on,
     run: (payload: unknown) => {
-      if (binding.filter && !binding.filter(payload)) {
-        return;
-      }
+      // A throwing `filter`/`params` mapper (user code) must not break the drain: it would
+      // reject the emitter and abandon sibling reactions/triggers on the same unit. Isolate it
+      // the same way we isolate a rejected run below — one bad trigger can't take down the rest.
+      try {
+        if (binding.filter && !binding.filter(payload)) {
+          return;
+        }
 
-      // Fire-and-forget: a run may reject (skip / superseded by takeLatest / abort). Errors
-      // still surface on the effect's failData; swallow the floating promise so a skipped run
-      // doesn't become an unhandled rejection.
-      target(map(payload)).catch(noop);
+        // Fire-and-forget: a run may reject (skip / superseded by takeLatest / abort). Errors
+        // still surface on the effect's failData; swallow the floating promise so a skipped run
+        // doesn't become an unhandled rejection.
+        target(map(payload)).catch(noop);
+      } catch {
+        // filter/params threw — swallowed so the trigger fails in isolation.
+      }
     },
   });
 

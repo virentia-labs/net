@@ -1,3 +1,4 @@
+import { isAbortReason } from "../shared/signal";
 import { isSkip } from "../shared/skip";
 import type { Operator } from "../shared/types";
 
@@ -17,7 +18,10 @@ export function fallback<Params, Data>(
         try {
           return await next(params, ctx);
         } catch (error) {
-          if (isSkip(error) || ctx.signal.aborted) {
+          // Cancellations are not failures to recover from — pass them through untouched. This
+          // mirrors the error store's classification (isSkip + isAbortReason) so a cancellation
+          // is treated the same everywhere, whether or not net's own signal is the aborter.
+          if (isSkip(error) || ctx.signal.aborted || isAbortReason(error)) {
             throw error;
           }
 
