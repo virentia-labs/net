@@ -1,16 +1,20 @@
 import {
   effect,
   event,
+  getCurrentScope,
   reaction,
   store,
   type EffectHandlerContext,
   type Effect,
   type EventCallable,
+  type Scope,
   type Store,
   type StoreWritable,
 } from "@virentia/core";
 
-import { resolveDefaults, type NetFactory } from "../defaults/registry";
+import { getGlobalDefaults, resolveDefaults, type NetFactory } from "../defaults/registry";
+import { childController, isAbortReason, raceAbort } from "../shared/signal";
+import { isSkip } from "../shared/skip";
 import type {
   Executor,
   Handler,
@@ -122,12 +126,70 @@ export function buildNet<Raw, Params, Data, Err = unknown>(
   );
   const error = store<Err | null>(null, undefined, name ? { name: `${name}.error` } : undefined);
   const stale = store<boolean>(false, undefined, name ? { name: `${name}.stale` } : undefined);
+  // `hasRun` distinguishes "never ran" from "ran with an undefined payload" — a param-less
+  // query's last params are legitimately `undefined`, so the value alone can't gate refresh.
+  const hasRun = store<boolean>(false);
   const lastParams = store<Raw | undefined>(undefined);
 
   const mapParams = config.params ?? ((raw: Raw) => raw as unknown as Params);
 
   const chain: Operator<any, Data>[] = [...(config.defaultUse ?? []), ...(config.use ?? [])];
   sortByStage(chain);
+
+  // Per-scope registry of in-flight run controllers. reset() cancels only the acting scope's
+  // runs; core's fx.abort() iterates every active call regardless of scope, so net owns a
+  // scope-partitioned controller layered under core's signal.
+  const runControllers = new WeakMap<Scope, Set<AbortController>>();
+
+  const registerRun = (scope: Scope, controller: AbortController): (() => void) => {
+    let set = runControllers.get(scope);
+
+    if (!set) {
+      set = new Set();
+      runControllers.set(scope, set);
+    }
+
+    const target = set;
+    target.add(controller);
+
+    return () => {
+      target.delete(controller);
+    };
+  };
+
+  const abortScopeRuns = (scope: Scope): void => {
+    const set = runControllers.get(scope);
+
+    if (!set) return;
+
+    // Safe to iterate live: unregister() deletes via .finally() (a microtask), so nothing mutates
+    // this set synchronously during the loop.
+    for (const controller of set) {
+      controller.abort();
+    }
+  };
+
+  // Global default operators (from overrideDefaults) contribute wrapHandler per-run, but their
+  // setup() must run too — once per instance — or a setup-only default (invalidation-style
+  // wiring) silently no-ops. Run it lazily at first dispatch so the reaction still catches the
+  // run, guarded per operator. Scoped defaults are intentionally excluded: their setup would wire
+  // a scope-global reaction (core reactions aren't scope-partitioned), leaking into other scopes.
+  const defaultSetupDone = new WeakSet<Operator<any, Data>>();
+
+  const runDefaultSetup = (): void => {
+    if (!config.factory) return;
+
+    const globals = getGlobalDefaults(config.factory);
+
+    if (!globals?.use) return;
+
+    for (const op of globals.use as Operator<any, Data>[]) {
+      if (op.setup && !defaultSetupDone.has(op)) {
+        defaultSetupDone.add(op);
+        op.setup(initCtx);
+      }
+    }
+  };
 
   const dispatch = (raw: Raw, ectx: EffectHandlerContext): Promise<Data> => {
     const params = mapParams(raw);
@@ -140,15 +202,24 @@ export function buildNet<Raw, Params, Data, Err = unknown>(
     const effectiveChain =
       defaults.use && defaults.use.length > 0 ? mergeChain(defaults.use, chain) : chain;
 
+    runDefaultSetup();
+
+    // A child of core's signal that reset() can abort per scope. raceAbort force-rejects the run
+    // when it fires, mirroring core's own cancel so even a signal-ignoring handler is discarded.
+    const controller = childController(ectx.signal);
+    const unregister = registerRun(ectx.scope, controller);
+
     const runCtx: RunCtx = {
-      signal: ectx.signal,
+      signal: controller.signal,
       scope: ectx.scope,
       key: config.keyOf ? config.keyOf(params) : undefined,
       name,
       handler: config.handler,
     };
 
-    return compose(effectiveChain, executor, initCtx)(params, runCtx);
+    const composed = Promise.resolve(compose(effectiveChain, executor, initCtx)(params, runCtx));
+
+    return raceAbort(composed, controller.signal).finally(unregister);
   };
 
   const fx = effect<Raw, Data, Err>(dispatch, name);
@@ -177,18 +248,33 @@ export function buildNet<Raw, Params, Data, Err = unknown>(
       error.value = null;
     },
   });
-  reaction({ on: fx.failData, run: (reason) => void (error.value = reason as Err) });
-  reaction({ on: fx.started, run: (params) => void (lastParams.value = params) });
+  reaction({
+    on: fx.failData,
+    run: (reason) => {
+      // Cancellations travel the failure path but are not real errors: a superseded takeLatest
+      // run rejects with a SkipSignal, and reset()/abort() reject the in-flight run with an
+      // AbortError. Keep both out of the error store (a real error — including TimeoutError —
+      // still lands). Callers wanting the raw signal use failData + isSkip.
+      if (isSkip(reason) || isAbortReason(reason)) return;
+      error.value = reason as Err;
+    },
+  });
+  reaction({
+    on: fx.started,
+    run: (params) => {
+      lastParams.value = params;
+      hasRun.value = true;
+    },
+  });
 
   const refresh = event<void>(name ? `${name}.refresh` : undefined);
   reaction({
     on: refresh,
     run: () => {
-      const last = lastParams.value;
-
-      if (last !== undefined) {
+      // Gate on hasRun, not on lastParams !== undefined: an undefined payload is a real run.
+      if (hasRun.value) {
         // Fire-and-forget; a skipped/superseded run rejects but surfaces on failData.
-        fx(last).catch(() => {});
+        fx(lastParams.value as Raw).catch(() => {});
       }
     },
   });
@@ -200,7 +286,16 @@ export function buildNet<Raw, Params, Data, Err = unknown>(
       data.value = initialData;
       error.value = null;
       stale.value = false;
-      void fx.abort();
+      // Clear the run history so a subsequent refresh() is a no-op (nothing is loaded).
+      hasRun.value = false;
+      lastParams.value = undefined;
+      // Cancel only this scope's in-flight runs. reset() clears per-scope stores, so its
+      // cancellation is per-scope too; core's fx.abort() would cancel every scope.
+      const scope = getCurrentScope();
+
+      if (scope) {
+        abortScopeRuns(scope);
+      }
     },
   });
 
