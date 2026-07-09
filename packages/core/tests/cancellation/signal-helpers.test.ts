@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
 
+import { delay } from "../../lib/shared/delay";
 import { childController, isAbortReason, raceAbort } from "../../lib/shared/signal";
 
 describe("raceAbort", () => {
@@ -56,6 +57,33 @@ describe("childController", () => {
     parent.abort(reason);
     expect(child.signal.aborted).toBe(true);
     expect(child.signal.reason).toBe(reason);
+  });
+});
+
+describe("delay", () => {
+  describe("with ms <= 0", () => {
+    test("resolves immediately when the signal is not aborted", async () => {
+      await expect(delay(0, new AbortController().signal)).resolves.toBeUndefined();
+    });
+
+    test("rejects immediately when the signal is already aborted", async () => {
+      // The ms<=0 fast path still honors an already-aborted signal — this is the only reachable
+      // site for that branch (every operator caller checks abort before awaiting delay).
+      const ctrl = new AbortController();
+      const reason = new Error("gone");
+      ctrl.abort(reason);
+      await expect(delay(0, ctrl.signal)).rejects.toBe(reason);
+    });
+  });
+
+  describe("with ms > 0", () => {
+    test("rejects as soon as the signal aborts mid-wait", async () => {
+      const ctrl = new AbortController();
+      const reason = new Error("mid-wait");
+      const p = delay(1000, ctrl.signal);
+      ctrl.abort(reason);
+      await expect(p).rejects.toBe(reason);
+    });
   });
 });
 

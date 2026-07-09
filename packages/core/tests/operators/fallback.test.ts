@@ -1,7 +1,14 @@
 import { scope, scoped } from "@virentia/core";
 import { describe, expect, test } from "vitest";
 
-import { fallback, query, SkipSignal } from "../../lib/index";
+import {
+  fallback,
+  query,
+  SkipSignal,
+  type Handler,
+  type OperatorInitCtx,
+  type RunCtx,
+} from "../../lib/index";
 import { reasonHarness } from "../support/harness";
 import { readStore } from "../support/runtime";
 
@@ -71,6 +78,21 @@ describe("fallback", () => {
       const app = scope();
       await scoped(app, () => q(undefined)).catch(() => {});
       expect(readStore(app, q.data)).toBeNull(); // not recovered
+    });
+
+    test("does not recover a non-abort error once the run signal is aborted", async () => {
+      // Isolates the ctx.signal.aborted clause directly: a cancelled run whose inner handler
+      // rejects with a plain (non-AbortError, non-skip) error must still pass through, not recover.
+      // End-to-end this is shadowed by isAbortReason / net's raceAbort, so drive wrapHandler itself.
+      const op = fallback<void, string>("fb");
+      const next: Handler<void, string> = async () => {
+        throw new Error("plain");
+      };
+      const wrapped = op.wrapHandler!(next, {} as OperatorInitCtx<string>);
+      const ctrl = new AbortController();
+      ctrl.abort();
+      const ctx = { signal: ctrl.signal } as unknown as RunCtx;
+      await expect(wrapped(undefined, ctx)).rejects.toThrow("plain"); // passed through, not "fb"
     });
   });
 });
