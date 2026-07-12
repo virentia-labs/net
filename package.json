@@ -30,6 +30,7 @@
   "devDependencies": {
     "@babel/core": "7.29.0",
     "@changesets/cli": "2.31.0",
+    "@vitest/coverage-v8": "0.34.6",
     "oxfmt": "^0.48.0",
     "oxlint": "^1.63.0",
     "tsdown": "^0.21.10",
