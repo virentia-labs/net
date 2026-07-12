@@ -50,6 +50,6 @@
     "@virentia/core": ">=0.4"
   },
   "devDependencies": {
-    "@virentia/core": "0.6.3"
+    "@virentia/core": "0.6.4"
   }
 }

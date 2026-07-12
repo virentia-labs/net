@@ -36,8 +36,8 @@ importers:
   packages/core:
     devDependencies:
       '@virentia/core':
-        specifier: 0.6.3
-        version: 0.6.3
+        specifier: 0.6.4
+        version: 0.6.4
 
   packages/react:
     dependencies:
@@ -45,8 +45,8 @@ importers:
         specifier: workspace:*
         version: link:../core
       '@virentia/react':
-        specifier: ^0.2.11
-        version: 0.2.11(react@19.2.7)
+        specifier: ^0.2.12
+        version: 0.2.12(react@19.2.7)
     devDependencies:
       '@testing-library/react':
         specifier: ^16.3.0
@@ -55,8 +55,8 @@ importers:
         specifier: ^19.2.7
         version: 19.2.17
       '@virentia/core':
-        specifier: 0.6.3
-        version: 0.6.3
+        specifier: 0.6.4
+        version: 0.6.4
       happy-dom:
         specifier: ^20.0.10
         version: 20.10.6
@@ -73,12 +73,12 @@ importers:
         specifier: workspace:*
         version: link:../core
       '@virentia/vue':
-        specifier: ^0.2.9
-        version: 0.2.9(vue@3.5.39(typescript@6.0.3))
+        specifier: ^0.2.10
+        version: 0.2.10(vue@3.5.39(typescript@6.0.3))
     devDependencies:
       '@virentia/core':
-        specifier: 0.6.3
-        version: 0.6.3
+        specifier: 0.6.4
+        version: 0.6.4
       '@vue/test-utils':
         specifier: ^2.4.6
         version: 2.4.11(@vue/compiler-dom@3.5.39)(@vue/server-renderer@3.5.39(vue@3.5.39(typescript@6.0.3)))(vue@3.5.39(typescript@6.0.3))
@@ -1019,16 +1019,16 @@ packages:
   '@types/ws@8.18.1':
     resolution: {integrity: sha512-ThVF6DCVhA8kUGy+aazFQ4kXQ7E1Ty7A3ypFOe0IcJV8O/M511G99AW24irKrW56Wt44yG9+ij8FaqoBGkuBXg==}
 
-  '@virentia/core@0.6.3':
-    resolution: {integrity: sha512-ZUPnajFt63UQ2vIK3k6WNr5a/aEp9cquAM1eLcGhCO0KeOy+y8GiYs3uIzPPvtYNSNsW97I219bniObOBkxWzQ==}
+  '@virentia/core@0.6.4':
+    resolution: {integrity: sha512-KYhlw+HiRSUF3pnbuGCtqhgnoCKeyyqc2WTxhcorNbOEYN1GcEpdyaELEg9J8jTWppMmr9mjdqmsM0mF6LY8nQ==}
 
-  '@virentia/react@0.2.11':
-    resolution: {integrity: sha512-xh9dNHLnnedd+GRmn6IGy4d11vrJjLuW/CHglPcegHb1fEURWLENOttSdbahJae7pmG+QMyVPJxwY5u+VaX4IQ==}
+  '@virentia/react@0.2.12':
+    resolution: {integrity: sha512-QHjDArYO1VPe4seJxNIWMe73VbU+10/15ZykAWNdmHhUAFWGmEIbHfDDI4VvSbWW8B0L2klfEZU4XIFUnU+sGw==}
     peerDependencies:
       react: '>=18'
 
-  '@virentia/vue@0.2.9':
-    resolution: {integrity: sha512-ChpU7Tp1FiA5AuORc7mWnPQ5iAd+d6daGFDnGgEuT0HiLOL7B4SKmimB818wa0FxMGku+6qXYNYHlDBwraJ3NQ==}
+  '@virentia/vue@0.2.10':
+    resolution: {integrity: sha512-o8DUpnvdW3lFRY9Mhq68yEmcVy8JYfa5JqlCWEFrQIsms9v/N+/bM1v3J7RXWq2B1z+icQ6uI1/TE4cEcTh0zw==}
     peerDependencies:
       vue: '>=3.3'
 
@@ -2866,16 +2866,16 @@ snapshots:
     dependencies:
       '@types/node': 26.1.0
 
-  '@virentia/core@0.6.3': {}
+  '@virentia/core@0.6.4': {}
 
-  '@virentia/react@0.2.11(react@19.2.7)':
+  '@virentia/react@0.2.12(react@19.2.7)':
     dependencies:
-      '@virentia/core': 0.6.3
+      '@virentia/core': 0.6.4
       react: 19.2.7
 
-  '@virentia/vue@0.2.9(vue@3.5.39(typescript@6.0.3))':
+  '@virentia/vue@0.2.10(vue@3.5.39(typescript@6.0.3))':
     dependencies:
-      '@virentia/core': 0.6.3
+      '@virentia/core': 0.6.4
       vue: 3.5.39(typescript@6.0.3)
 
   '@vitest/coverage-v8@0.34.6(vitest@0.34.6(happy-dom@20.10.6))':
