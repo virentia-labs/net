@@ -1,5 +1,13 @@
 # @virentia/net-vue
 
+## 0.1.1
+
+### Patch Changes
+
+- fix: bump virentia
+- Updated dependencies
+  - @virentia/net-core@0.1.1
+
 ## 0.1.0
 
 ### Minor Changes
