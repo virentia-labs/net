@@ -1,5 +1,11 @@
 # @virentia/net-core
 
+## 0.1.2
+
+### Patch Changes
+
+- c25fac4: fix: bump virentia to core 0.9.0 (react 0.4.1, vue 0.4.1)
+
 ## 0.1.1
 
 ### Patch Changes
