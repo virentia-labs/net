@@ -1,6 +1,6 @@
 {
   "name": "@virentia/net-react",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "",
   "keywords": [],
   "homepage": "https://movpushmov.dev/net/react/",
@@ -38,12 +38,12 @@
   },
   "dependencies": {
     "@virentia/net-core": "workspace:*",
-    "@virentia/react": "^0.4.1"
+    "@virentia/react": "^0.5.1"
   },
   "devDependencies": {
     "@testing-library/react": "^16.3.0",
     "@types/react": "^19.2.7",
-    "@virentia/core": "0.9.0",
+    "@virentia/core": "0.11.1",
     "happy-dom": "^20.0.10",
     "react": "^19.2.1",
     "react-dom": "^19.2.1"

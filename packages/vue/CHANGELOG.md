@@ -1,5 +1,13 @@
 # @virentia/net-vue
 
+## 0.1.3
+
+### Patch Changes
+
+- Update Virentia dependencies to core 0.11.1, React bindings 0.5.1, and Vue bindings 0.5.1.
+- Updated dependencies
+  - @virentia/net-core@0.1.3
+
 ## 0.1.2
 
 ### Patch Changes
