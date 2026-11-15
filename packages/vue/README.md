@@ -5,6 +5,8 @@ Vue 3 bindings for [`@virentia/net-core`](https://movpushmov.dev/net/). Mirrors
 
 ## Install
 
+Requires `@virentia/core` 0.11.2 or newer.
+
 ```sh
 pnpm add @virentia/net-vue @virentia/net-core @virentia/vue @virentia/core vue
 ```

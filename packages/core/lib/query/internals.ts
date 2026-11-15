@@ -11,6 +11,7 @@ import {
   type Store,
   type StoreWritable,
 } from "@virentia/core";
+import { getModelSetupContext, scopedModelValue } from "@virentia/core/internal";
 
 import { getGlobalDefaults, resolveDefaults, type NetFactory } from "../defaults/registry";
 import { childController, isAbortReason, raceAbort } from "../shared/signal";
@@ -309,7 +310,7 @@ export function buildNet<Raw, Params, Data, Err = unknown>(
     addOperator,
   };
 
-  return Object.assign(fx, {
+  const result = Object.assign(fx, {
     data: data as Store<Data | null>,
     error: error as Store<Err | null>,
     stale: stale as Store<boolean>,
@@ -317,4 +318,5 @@ export function buildNet<Raw, Params, Data, Err = unknown>(
     reset,
     [NET]: internals as NetInternals<Raw, unknown, Data>,
   }) as NetEffect<Raw, Data, Err>;
+  return getModelSetupContext() ? scopedModelValue(result) : result;
 }
