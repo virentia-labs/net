@@ -1,5 +1,14 @@
 # @virentia/net-core
 
+## 0.1.4
+
+### Patch Changes
+
+- Bind network unit state and cleanup to native model instances.
+
+- Updated Virentia dependencies
+  - @virentia/core@0.12.0
+
 ## 0.1.3
 
 ### Patch Changes

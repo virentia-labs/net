@@ -36,17 +36,14 @@ importers:
   packages/core:
     devDependencies:
       '@virentia/core':
-        specifier: 0.11.1
-        version: 0.11.1
+        specifier: link:../../../virentia/packages/core
+        version: link:../../../virentia/packages/core
 
   packages/react:
     dependencies:
       '@virentia/net-core':
         specifier: workspace:*
         version: link:../core
-      '@virentia/react':
-        specifier: ^0.5.1
-        version: 0.5.1(react@19.2.7)
     devDependencies:
       '@testing-library/react':
         specifier: ^16.3.0
@@ -55,8 +52,11 @@ importers:
         specifier: ^19.2.7
         version: 19.2.17
       '@virentia/core':
-        specifier: 0.11.1
-        version: 0.11.1
+        specifier: link:../../../virentia/packages/core
+        version: link:../../../virentia/packages/core
+      '@virentia/react':
+        specifier: link:../../../virentia/packages/react
+        version: link:../../../virentia/packages/react
       happy-dom:
         specifier: ^20.0.10
         version: 20.10.6
@@ -72,13 +72,13 @@ importers:
       '@virentia/net-core':
         specifier: workspace:*
         version: link:../core
-      '@virentia/vue':
-        specifier: ^0.5.1
-        version: 0.5.1(vue@3.5.39(typescript@6.0.3))
     devDependencies:
       '@virentia/core':
-        specifier: 0.11.1
-        version: 0.11.1
+        specifier: link:../../../virentia/packages/core
+        version: link:../../../virentia/packages/core
+      '@virentia/vue':
+        specifier: link:../../../virentia/packages/vue
+        version: link:../../../virentia/packages/vue
       '@vue/test-utils':
         specifier: ^2.4.6
         version: 2.4.11(@vue/compiler-dom@3.5.39)(@vue/server-renderer@3.5.39(vue@3.5.39(typescript@6.0.3)))(vue@3.5.39(typescript@6.0.3))
@@ -1018,24 +1018,6 @@ packages:
 
   '@types/ws@8.18.1':
     resolution: {integrity: sha512-ThVF6DCVhA8kUGy+aazFQ4kXQ7E1Ty7A3ypFOe0IcJV8O/M511G99AW24irKrW56Wt44yG9+ij8FaqoBGkuBXg==}
-
-  '@virentia/core@0.11.1':
-    resolution: {integrity: sha512-BXPf9PQbRYIaPwZ9S8znt5cBDN0h0nmqNI7n2/IcZhloCrTYu45eOspx6PBW6JTPBSfnfEw+7jPDsmd7n6yCvQ==}
-    peerDependencies:
-      '@sinclair/typebox': ^0.34.52
-    peerDependenciesMeta:
-      '@sinclair/typebox':
-        optional: true
-
-  '@virentia/react@0.5.1':
-    resolution: {integrity: sha512-JZ/pMOXK2Gded5WVJnTlgSeaxICdsW1rwhX7Q3lL4K1l83brVpIqeCn0DZiqL/tagbIwTSpEgN9a5j4xy05ogA==}
-    peerDependencies:
-      react: '>=18'
-
-  '@virentia/vue@0.5.1':
-    resolution: {integrity: sha512-+BO6syAbmwFv8F3BWowLawi5SDw2MfnNG5zxSNtrRQcjOnQ+QUmnx9tMD8+gCm3WKmphvY2ne+CgvC0CVmYu1w==}
-    peerDependencies:
-      vue: '>=3.3'
 
   '@vitest/coverage-v8@0.34.6':
     resolution: {integrity: sha512-fivy/OK2d/EsJFoEoxHFEnNGTg+MmdZBAVK9Ka4qhXR2K3J0DS08vcGVwzDtXSuUMabLv4KtPcpSKkcMXFDViw==}
@@ -2870,22 +2852,6 @@ snapshots:
   '@types/ws@8.18.1':
     dependencies:
       '@types/node': 26.1.0
-
-  '@virentia/core@0.11.1': {}
-
-  '@virentia/react@0.5.1(react@19.2.7)':
-    dependencies:
-      '@virentia/core': 0.11.1
-      react: 19.2.7
-    transitivePeerDependencies:
-      - '@sinclair/typebox'
-
-  '@virentia/vue@0.5.1(vue@3.5.39(typescript@6.0.3))':
-    dependencies:
-      '@virentia/core': 0.11.1
-      vue: 3.5.39(typescript@6.0.3)
-    transitivePeerDependencies:
-      - '@sinclair/typebox'
 
   '@vitest/coverage-v8@0.34.6(vitest@0.34.6(happy-dom@20.10.6))':
     dependencies:

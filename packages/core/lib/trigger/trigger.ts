@@ -22,7 +22,8 @@ export interface TriggerBinding<Raw> {
 export type Unsubscribe = () => void;
 
 // Bind a trigger to a query/mutation: when `on` fires, call the effect with mapped params.
-// Composable — attach as many as needed. Auto-cleans up when created inside an owner.
+// Declare shared triggers in staticModel.setup. A trigger created by a bound
+// model method also attaches its cleanup to that instance's task owner.
 export function trigger<Raw>(
   target: NetEffect<Raw, any, any>,
   binding: TriggerBinding<Raw>,

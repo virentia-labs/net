@@ -5,6 +5,8 @@ Virentia effect, so these hooks are thin sugar over `@virentia/react`'s `useUnit
 
 ## Install
 
+Requires `@virentia/core` 0.11.2 or newer.
+
 ```sh
 pnpm add @virentia/net-react @virentia/net-core @virentia/react @virentia/core react
 ```

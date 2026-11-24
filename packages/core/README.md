@@ -8,6 +8,8 @@ composable operators.
 
 ## Install
 
+Requires `@virentia/core` 0.11.2 or newer.
+
 ```sh
 pnpm add @virentia/net-core @virentia/core
 ```
@@ -37,9 +39,44 @@ userQuery.failData;  // Event<Error>
 // Trigger it from any Virentia unit:
 trigger(userQuery, {
   on: userRoute.opened,
-  params: () => ({ id: userRoute.params.id }),
+  params: () => ({ id: userRoute.params.value.id }),
 });
 ```
+
+## Static models
+
+Declare the query and its triggers in `setup`, which runs once. Return the query
+directly: `.create()` binds its call and nested lifecycle/data units to the instance.
+
+```ts
+import { event, scope, scoped } from "@virentia/core";
+import { staticModel } from "@virentia/core/models";
+import { query, trigger } from "@virentia/net-core";
+
+const Search = staticModel({
+  setup() {
+    const changed = event<string>();
+    const load = query({
+      handler: async (text: string, { signal }) => {
+        const response = await fetch(`/search?q=${encodeURIComponent(text)}`, { signal });
+        return response.json();
+      },
+    });
+    trigger(load, { on: changed });
+    return { changed, load };
+  },
+});
+
+const search = scoped(scope(), () => Search.create({}));
+await search.changed("virentia");
+console.log(search.load.data.value);
+await search.dispose(); // cancels this instance's pending requests
+```
+
+Instances share unit declarations while keeping values and cancellation separate.
+`load.data`, `load.pending`, `load.refresh()` and `load.reset()` retain their
+existing API. `.static()` creates a separate module-style graph when that
+lifetime is desired. Arbitrary application objects keep their existing behavior.
 
 ## Mutation
 
@@ -89,7 +126,7 @@ overrideDefaults(query, { executor: tanstackExecutor(() => queryClient) });
 overrideDefaults(query, { use: [retry({ times: 5 })] }, { scope: testScope });
 ```
 
-`cache(...)` and barriers are still on the roadmap — see [`docs/plan/core.md`](../../docs/plan/core.md).
+`cache(...)` and barriers are still on the roadmap.
 
 ## License
 

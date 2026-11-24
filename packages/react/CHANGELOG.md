@@ -1,5 +1,16 @@
 # @virentia/net-react
 
+## 0.1.4
+
+### Patch Changes
+
+- Support network units bound to native models in React.
+
+- Updated Virentia dependencies
+  - @virentia/net-core@0.1.4
+  - @virentia/core@0.12.0
+  - @virentia/react@0.6.0
+
 ## 0.1.3
 
 ### Patch Changes
