@@ -1,6 +1,6 @@
 {
   "name": "@virentia/net-react",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "description": "",
   "keywords": [],
   "homepage": "https://movpushmov.dev/net/react/",
@@ -50,8 +50,8 @@
     "@virentia/react": "link:../../../virentia/packages/react"
   },
   "peerDependencies": {
-    "@virentia/core": ">=0.11.2",
+    "@virentia/core": ">=0.12.0",
     "react": ">=18",
-    "@virentia/react": ">=0.5.2"
+    "@virentia/react": ">=0.6.0"
   }
 }
